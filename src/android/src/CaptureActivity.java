@@ -51,7 +51,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mlkit.vision.barcode.Barcode;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
@@ -262,7 +262,8 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
 
     void startCamera() {
         mCameraView = findViewById(getResources().getIdentifier("previewView", "id", getPackageName()));
-        mCameraView.setPreferredImplementationMode(PreviewView.ImplementationMode.TEXTURE_VIEW);
+        // mCameraView.setPreferredImplementationMode(PreviewView.ImplementationMode.TEXTURE_VIEW);
+        mCameraView.setImplementationMode(PreviewView.ImplementationMode.COMPATIBLE);
         mCameraView.setScaleX(1F);
         mCameraView.setScaleY(1F);
 
@@ -305,7 +306,8 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
                 .build();
 
 
-        preview.setSurfaceProvider(mCameraView.createSurfaceProvider());
+        // preview.setSurfaceProvider(mCameraView.createSurfaceProvider());
+        preview.setSurfaceProvider(mCameraView.getSurfaceProvider());
 
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
@@ -324,7 +326,7 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
                 if (image == null || image.getImage() == null) {
                     return;
                 }
-                
+
                 Image mediaImage = image.getImage();
 
                 // commenting out croped image for full screen scanning 
