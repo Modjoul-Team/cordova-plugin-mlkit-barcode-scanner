@@ -324,34 +324,40 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
                 if (image == null || image.getImage() == null) {
                     return;
                 }
+                
+                Image mediaImage = image.getImage();
 
-                Bitmap bmp = BitmapUtils.getBitmap(image);
+                // commenting out croped image for full screen scanning 
 
-                int height = bmp.getHeight();
-                int width = bmp.getWidth();
+                // Bitmap bmp = BitmapUtils.getBitmap(image);
 
-                int left, right, top, bottom, diameter, boxHeight, boxWidth;
+                // int height = bmp.getHeight();
+                // int width = bmp.getWidth();
 
-                diameter = width;
-                if (height < width) {
-                    diameter = height;
-                }
+                // int left, right, top, bottom, diameter, boxHeight, boxWidth;
 
-                int offset = (int) ((1 - DetectorSize) * diameter);
-                diameter -= offset;
+                // diameter = width;
+                // if (height < width) {
+                //     diameter = height;
+                // }
 
-
-                left = width / 2 - diameter / 2;
-                top = height / 2 - diameter / 2;
-                right = width / 2 + diameter / 2;
-                bottom = height / 2 + diameter / 2;
-
-                boxHeight = bottom - top;
-                boxWidth = right - left;
+                // int offset = (int) ((1 - DetectorSize) * diameter);
+                // diameter -= offset;
 
 
-                Bitmap bitmap = Bitmap.createBitmap(bmp, left, top, boxWidth, boxHeight);
-                scanner.process(InputImage.fromBitmap(bitmap, image.getImageInfo().getRotationDegrees())).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                // left = width / 2 - diameter / 2;
+                // top = height / 2 - diameter / 2;
+                // right = width / 2 + diameter / 2;
+                // bottom = height / 2 + diameter / 2;
+
+                // boxHeight = bottom - top;
+                // boxWidth = right - left;
+
+
+                // Bitmap bitmap = Bitmap.createBitmap(bmp, left, top, boxWidth, boxHeight);
+                // scanner.process(InputImage.fromBitmap(bitmap, image.getImageInfo().getRotationDegrees())).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+               
+                scanner.process(InputImage.fromMediaImage(mediaImage,image.getImageInfo().getRotationDegrees())).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
                     public void onSuccess(List<Barcode> barCodes) {
 
