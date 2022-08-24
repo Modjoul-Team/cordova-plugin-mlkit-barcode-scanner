@@ -51,7 +51,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mlkit.vision.barcode.Barcode;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
@@ -262,7 +262,8 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
 
     void startCamera() {
         mCameraView = findViewById(getResources().getIdentifier("previewView", "id", getPackageName()));
-        mCameraView.setPreferredImplementationMode(PreviewView.ImplementationMode.TEXTURE_VIEW);
+        // mCameraView.setPreferredImplementationMode(PreviewView.ImplementationMode.TEXTURE_VIEW);
+        mCameraView.setImplementationMode(PreviewView.ImplementationMode.COMPATIBLE);
         mCameraView.setScaleX(1F);
         mCameraView.setScaleY(1F);
 
@@ -305,7 +306,8 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
                 .build();
 
 
-        preview.setSurfaceProvider(mCameraView.createSurfaceProvider());
+        // preview.setSurfaceProvider(mCameraView.createSurfaceProvider());
+        preview.setSurfaceProvider(mCameraView.getSurfaceProvider());
 
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
@@ -325,33 +327,39 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
                     return;
                 }
 
-                Bitmap bmp = BitmapUtils.getBitmap(image);
+                Image mediaImage = image.getImage();
 
-                int height = bmp.getHeight();
-                int width = bmp.getWidth();
+                // commenting out croped image for full screen scanning 
 
-                int left, right, top, bottom, diameter, boxHeight, boxWidth;
+                // Bitmap bmp = BitmapUtils.getBitmap(image);
 
-                diameter = width;
-                if (height < width) {
-                    diameter = height;
-                }
+                // int height = bmp.getHeight();
+                // int width = bmp.getWidth();
 
-                int offset = (int) ((1 - DetectorSize) * diameter);
-                diameter -= offset;
+                // int left, right, top, bottom, diameter, boxHeight, boxWidth;
 
+                // diameter = width;
+                // if (height < width) {
+                //     diameter = height;
+                // }
 
-                left = width / 2 - diameter / 2;
-                top = height / 2 - diameter / 2;
-                right = width / 2 + diameter / 2;
-                bottom = height / 2 + diameter / 2;
-
-                boxHeight = bottom - top;
-                boxWidth = right - left;
+                // int offset = (int) ((1 - DetectorSize) * diameter);
+                // diameter -= offset;
 
 
-                Bitmap bitmap = Bitmap.createBitmap(bmp, left, top, boxWidth, boxHeight);
-                scanner.process(InputImage.fromBitmap(bitmap, image.getImageInfo().getRotationDegrees())).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                // left = width / 2 - diameter / 2;
+                // top = height / 2 - diameter / 2;
+                // right = width / 2 + diameter / 2;
+                // bottom = height / 2 + diameter / 2;
+
+                // boxHeight = bottom - top;
+                // boxWidth = right - left;
+
+
+                // Bitmap bitmap = Bitmap.createBitmap(bmp, left, top, boxWidth, boxHeight);
+                // scanner.process(InputImage.fromBitmap(bitmap, image.getImageInfo().getRotationDegrees())).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+               
+                scanner.process(InputImage.fromMediaImage(mediaImage,image.getImageInfo().getRotationDegrees())).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
                     public void onSuccess(List<Barcode> barCodes) {
 
