@@ -13,9 +13,11 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
+import android.util.Log;
 import android.util.Size;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -23,6 +25,8 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -440,6 +444,40 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
             } else {
                 canvas.drawRoundRect(new RectF(left, top, right, bottom), 100, 100, paint);
             }
+
+            paint.setColor(Color.rgb(234,112,5));
+            paint.setTextSize(100);
+            DetectionTypes = getIntent().getIntExtra("DetectionTypes", 1234);
+            Paint mTxtPaint = new Paint();
+            Paint.FontMetrics fm = new Paint.FontMetrics();
+
+            mTxtPaint.setColor(Color.rgb(28,41,57));
+            mTxtPaint.setTextSize(80.0f);
+            mTxtPaint.getFontMetrics(fm);
+            int margin = 10;
+            String str = "";
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int displayWidth = displayMetrics.widthPixels;
+            mTxtPaint.setTextAlign(Paint.Align.CENTER);
+
+            int xPos = (canvas.getWidth() / 2);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.rgb(28, 41, 57));
+            }
+            if(DetectionTypes== 256)
+            {
+            str = "Scan Your Device";
+            }else
+            {
+            str = "Scan Your ID";
+            }
+            canvas.drawRect(0, 0, displayWidth, 100 + fm.bottom+ margin, mTxtPaint);
+            mTxtPaint.setColor(Color.rgb(234,112,5));
+            canvas.drawText(str, xPos, 100, mTxtPaint);
+
 
             holder.unlockCanvasAndPost(canvas);
         }
