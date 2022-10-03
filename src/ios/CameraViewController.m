@@ -264,6 +264,34 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     UITapGestureRecognizer* tapScanner = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAtPoint:)];
     [_label1 addGestureRecognizer:tapScanner];
 
+    NSNumber *formats = 0;
+    //If barcodeFormats == 0 then process as a VIN with VIN verifications.
+    if([_barcodeFormats  isEqual: @0]) {
+        NSLog(@"Running VIN style");
+        formats = @(MLKBarcodeFormatCode39|MLKBarcodeFormatDataMatrix);
+    } else if([_barcodeFormats  isEqual: @1234]) {
+    } else {
+        formats = _barcodeFormats;
+    }
+    
+    NSString *greeting = @"Scan Your ID";
+    if([formats  isEqual: @256])
+    {
+        greeting=@"Scan Your Device";
+    }
+
+    UILabel *fromLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight/10)];
+    fromLabel.text = greeting;
+    fromLabel.font = [UIFont boldSystemFontOfSize:    38];//[UIFont systemFontOfSize:12];
+    fromLabel.numberOfLines = 1;
+    fromLabel.minimumScaleFactor = 0.5;
+    fromLabel.adjustsFontSizeToFitWidth = YES;
+    fromLabel.baselineAdjustment = UIBaselineAdjustmentAlignBaselines; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
+    fromLabel.backgroundColor = [UIColor  colorWithRed:28.0f/255.0f green:41.0f/255.0f blue:57.0f/255.0f alpha:1.0f];
+    fromLabel.textColor = [UIColor  colorWithRed:234.0f/255.0f green:112/255.0f blue:5.0f/255.0f alpha:1.0f];
+    fromLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [fromLabel addGestureRecognizer:tapScanner];
     CGFloat buttonSize = 45.0;
 
     UIButton *_cancelButton = [[UIButton alloc] init];
@@ -315,6 +343,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     [self.view addSubview:self.torchButton];
 
     [self.view addSubview:_label1];
+    [self.view addSubview:fromLabel];
 
     self.imageView = [[UIImageView alloc] initWithImage:nil];
 
